@@ -1,11 +1,7 @@
 import java.util.*;
 
 class Solution {        //노랑의 가로+세로+가로+세로+4 = 갈색
-    
-    
-    
-   
-    
+      
     public int[] solution(int brown, int yellow) {
         int[] answer = {};      //가로, 세로 중 큰거 먼저 
         answer = new int[2];

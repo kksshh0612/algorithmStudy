@@ -4,6 +4,5 @@ SELECT u.USER_ID, u.NICKNAME,
     concat(substr(u.TLNO, 1, 3), "-", substr(u.TLNO, 4, 4), "-", substr(u.TLNO, 8, 4)) as '전화번호'
 from USED_GOODS_BOARD as b inner join USED_GOODS_USER as u on b.WRITER_ID = u.USER_ID
 group by b.WRITER_ID 
-having count(b.BOARD_ID) >= 3
+having count(*) >= 3
 order by u.USER_ID desc
-

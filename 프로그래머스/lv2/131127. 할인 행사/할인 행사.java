@@ -18,12 +18,10 @@ class Solution {
                 if(!countMap.containsKey(discount[j])){     
                     break;
                 }
-                
                 countMap.put(discount[j], countMap.get(discount[j]) + 1);
             }
-            // for(String str : countMap.keySet()){
-            //     System.out.println(str + " " + countMap.get(str));
-            // }
+        
+            // 현재 묶음에서 원하는 물건 수와 discount의 물건 수가 같은지 확인해서 같으면 answer++
             boolean isAnswer = true;
             for(int j = 0; j < want.length; j++){
                 if(wantMap.get(want[j]) != countMap.get(want[j])){
@@ -33,6 +31,7 @@ class Solution {
             }
             if(isAnswer) answer++;
             
+            // discount 수 세는 map 초기화
             for(int idx = 0; idx < number.length; idx++){
                 countMap.put(want[idx], 0);
             }

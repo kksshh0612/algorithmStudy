@@ -1,17 +1,22 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 // Interval Partitioning 문제. 수업이 빨리 끝나는 순으로 정렬 / 우선순위 큐에 종료 시간 저장
 //public class Boj11000 {
 public class Main{
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-        int[][] courseList = new int[n][2];
-        int ans = 0;
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+
+        int n = Integer.parseInt(bufferedReader.readLine());
+        int[][] courseList = new int[n][2];
+
         for(int i = 0; i < n; i++){
-            courseList[i][0] = scanner.nextInt();
-            courseList[i][1] = scanner.nextInt();
+            StringTokenizer stringTokenizer = new StringTokenizer(bufferedReader.readLine());
+            courseList[i][0] = Integer.parseInt(stringTokenizer.nextToken());
+            courseList[i][1] = Integer.parseInt(stringTokenizer.nextToken());
         }
 
         Arrays.sort(courseList, Comparator.comparingInt((int[] o) -> o[0]));        // 시작 시간 기준 오름차순 정렬

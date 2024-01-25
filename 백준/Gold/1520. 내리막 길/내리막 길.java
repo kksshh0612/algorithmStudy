@@ -1,72 +1,65 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
+// 내리막길로 갈 수 잇는 경우의 수
+// 각 칸에 현재까지 온 방법의 수 적기
 public class Main {
-	static int M, N;
-	static int[][] arr, dp;
-	static int[] rangeX = { -1, 0, 1, 0 };
-	static int[] rangeY = { 0, 1, 0, -1 };
 
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+    public static int[] dirX = {0, 1, 0, -1};
+    public static int[] dirY = {-1, 0, 1, 0};
 
-		M = Integer.parseInt(st.nextToken());
-		N = Integer.parseInt(st.nextToken());
+    public static int DFS(int[][] dp, int[][] arr, int currX, int currY){
 
-		arr = new int[M + 1][N + 1];
-		for (int i = 1; i <= M; i++) {
-			st = new StringTokenizer(br.readLine());
+        if(dp[currY][currX] != -1) return dp[currY][currX];
 
-			for (int j = 1; j <= N; j++) {
-				arr[i][j] = Integer.parseInt(st.nextToken());
-			}
-		}
+        if(currX == arr[0].length - 1 && currY == arr.length - 1) return 1;
 
-		dp = new int[M + 1][N + 1]; // (x, y)에서 도착점으로 가는 경로의 개수
-		for (int i = 1; i <= M; i++) {
-			for (int j = 1; j <= N; j++) {
-				dp[i][j] = -1;
-			}
-		}
+        dp[currY][currX] = 0;
 
-		bw.write(DFS(1, 1) + "\n");
-		bw.flush();
-		bw.close();
-		br.close();
-	}
+        for(int i = 0; i < 4; i++){
+            int nextX = currX + dirX[i];
+            int nextY = currY + dirY[i];
 
-	public static int DFS(int x, int y) {
-		if (x == M && y == N) {
-			return 1;
-		}
+            if((nextX < 0 || nextX >= arr[0].length) || (nextY < 0 || nextY >= arr.length)) continue;
 
-		if (dp[x][y] != -1) {
-			return dp[x][y];
-		}
+            if(arr[nextY][nextX] < arr[currY][currX]){
 
-		dp[x][y] = 0; // 현재 위치에서 끝점까지 도달하는 경로의 개수를 0으로 초기화.
-		for (int i = 0; i < 4; i++) {
-			int dx = x + rangeX[i];
-			int dy = y + rangeY[i];
+                dp[currY][currX] += DFS(dp, arr, nextX, nextY);
+            }
+        }
 
-			if (dx < 1 || dy < 1 || dx > M || dy > N) {
-				continue;
-			}
-			
-			// arr[x][y]보다 arr[dx][dy]가 높이가 더 낮다면
-			// arr[dx][dy]에서 끝점까지 도달하는 경로의 개수를 더한다.
-			if (arr[x][y] > arr[dx][dy]) {
-				dp[x][y] += DFS(dx, dy);
-			}
-		}
+        return dp[currY][currX];
+    }
 
-		return dp[x][y];
-	}
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer stringTokenizer = new StringTokenizer(bufferedReader.readLine());
+        int row = Integer.parseInt(stringTokenizer.nextToken());
+        int col = Integer.parseInt(stringTokenizer.nextToken());
+        int[][] arr = new int[row][col];
+        int[][] dp = new int[row][col];
+        for(int i = 0; i < row; i++){
+            stringTokenizer = new StringTokenizer(bufferedReader.readLine());
+            for(int j = 0; j < col; j++){
+                arr[i][j] = Integer.parseInt(stringTokenizer.nextToken());
+                dp[i][j] = -1;
+            }
+        }
 
+
+        int ans = DFS(dp, arr, 0, 0);
+
+//        for(int i = 0; i < row; i++){
+//            for(int j = 0; j < col; j++){
+//                System.out.print(dp[i][j] + " ");
+//            }
+//            System.out.println();
+//        }
+
+        System.out.println(ans);
+
+
+    }
 }

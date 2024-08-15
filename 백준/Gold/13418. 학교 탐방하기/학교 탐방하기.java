@@ -21,8 +21,8 @@ public class Main {
     }
 
     public static void union(int[] parent, int num1, int num2){
-        num1 = find(parent, num1);
-        num2 = find(parent, num2);
+//        num1 = find(parent, num1);
+//        num2 = find(parent, num2);
 
         int min = Math.min(num1, num2);
 
@@ -38,9 +38,11 @@ public class Main {
         }
 
         for(Partial partial : graph){
-            if(find(parent, partial.node1) == find(parent, partial.node2)) continue;
+            int num1 = find(parent, partial.node1);
+            int num2 = find(parent, partial.node2);
+            if(num1 == num2) continue;
 
-            union(parent, partial.node1, partial.node2);
+            union(parent, num1, num2);
             if(partial.road == 0) cnt++;
         }
 

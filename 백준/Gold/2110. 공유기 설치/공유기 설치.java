@@ -1,39 +1,45 @@
-import java.util.Arrays;
-import java.util.Scanner;
-
-//public class Boj2110 {
-public class Main {    
+import java.util.*;
+// 가장 인접한 공유기 거리 -> 최대
+// 거리를 결정하여 해당 거리만큼 놨을 때, 주어진 개수만큼 놔지는지 확인.
+public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int homeNum = scanner.nextInt();
-        int wifiNum = scanner.nextInt();
-        int[] home = new int[homeNum];
-        for(int i = 0; i < homeNum; i++){
-            home[i] = scanner.nextInt();
+        Scanner sc = new Scanner(System.in);
+        int size = sc.nextInt();
+        int cnt = sc.nextInt();
+        int[] arr = new int[size];
+
+        for(int i = 0; i < size; i++){
+            arr[i] = sc.nextInt();
         }
+        Arrays.sort(arr);
 
-        Arrays.sort(home);
-        int minDistance = 1, maxDistance = home[home.length - 1], midDistance = 0;
+        int left = 1, right = arr[size - 1] - arr[0];
+        while(left <= right){
+            int mid = (left + right) / 2;
 
-        while(minDistance <= maxDistance){
-            midDistance = (minDistance + maxDistance) / 2;
-            int currWifi = 1, prevWifi = home[0];
-
-            for(int i = 1; i < homeNum; i++){
-                if(currWifi < wifiNum && prevWifi + midDistance <= home[i]){
-                    currWifi++;
-                    prevWifi = home[i];
+            int currCnt = 0, idx = 0, prevPos = -1;
+            while(idx < size){
+                if(prevPos == -1){      //처음이면 일단 가로등 세움
+                    currCnt++;
+                    prevPos = arr[idx];
                 }
+
+                if(arr[idx] - prevPos >= mid){      // 현재 탐색중인 최소 거리보다 같거나 크면 세움
+                    currCnt++;
+                    prevPos = arr[idx];
+                }
+
+                idx++;
             }
-            if(currWifi < wifiNum){
-                maxDistance = midDistance - 1;
+
+            if(currCnt >= cnt){
+                left = mid + 1;
             }
             else{
-                minDistance = midDistance + 1;
+                right = mid - 1;
             }
         }
 
-        System.out.println(maxDistance);
-
+        System.out.println(right);
     }
 }

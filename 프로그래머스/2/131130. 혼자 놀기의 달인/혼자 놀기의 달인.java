@@ -8,8 +8,6 @@ class Solution {
     }
     
     public static void union(int[] parent, int n1, int n2){
-        // int n1 = find(parent, n1);
-        // int n2 = find(parent, n2);
         
         int min = Math.min(n1, n2);
         
@@ -30,8 +28,6 @@ class Solution {
             int n1 = find(parent, i + 1);
             int n2 = find(parent, cards[i]);
             
-            // System.out.println(i + 1 + " " + cards[i] + " / " + n1 + " " + n2);
-            
             if(n1 != n2){
                 union(parent, n1, n2);
             }
@@ -48,10 +44,6 @@ class Solution {
             list.add(map.get(key));
         }
         Collections.sort(list, Comparator.reverseOrder());
-        
-        // for(int i = 0; i < list.size(); i++){
-        //     System.out.println(list.get(i));
-        // }
         
         answer *= list.get(0);
         if(list.size() == 1){

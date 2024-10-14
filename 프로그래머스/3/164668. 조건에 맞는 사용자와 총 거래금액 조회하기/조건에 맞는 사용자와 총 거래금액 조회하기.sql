@@ -1,9 +1,9 @@
 -- 코드를 입력하세요
-SELECT u.user_id, u.nickname, sum(b.price) as TOTAL_SALES
-from used_goods_board as b 
-    inner join used_goods_user as u 
-        on b.writer_id = u.user_id 
-where b.status = 'DONE'
-group by u.user_id 
+SELECT u.USER_ID, u.NICKNAME, sum(b.PRICE) as TOTAL_SALES
+from USED_GOODS_BOARD as b
+    inner join USED_GOODS_USER as u
+        on b.WRITER_ID = u.USER_ID
+where b.STATUS = 'DONE'
+group by u.USER_ID	
 having TOTAL_SALES >= 700000
 order by TOTAL_SALES

@@ -3,37 +3,55 @@ import java.io.*;
 
 public class Main {
 
-    public static List<List<Node>> graph = new ArrayList<>();
+    public static List<Edge> graph = new ArrayList<>();
     public static int nodeSize, start, end;
 
-    public static class Node{
-        int dest, val;
-        public Node(int d, int v){
-            this.dest = d;
-            this.val = v;
+    public static class Edge{
+        int node1, node2, val;
+        public Edge(int node1, int node2, int val){
+            this.node1 = node1;
+            this.node2 = node2;
+            this.val = val;
         }
     }
 
-    // minVal 이상인 경로만 탐색해서 start부터 end까지 갈 수 있는지 판단
-    public static boolean bfs(int minVal){
-        Queue<Node> queue = new LinkedList<>();
-        boolean[] check = new boolean[nodeSize + 1];
-        queue.add(new Node(start, 0));
-        check[start] = true;
+    public static int find(int[] parent, int x){
+        if(parent[x] == x) return x;
+        else return find(parent, parent[x]);
+    }
 
-        while(!queue.isEmpty()){
-            Node curr = queue.poll();
-            for(Node next : graph.get(curr.dest)){      //노드에 연결된 노드 탐색
-                if(check[next.dest]) continue;
-                if(next.val < minVal) continue;
+    public static void union(int[] parent, int num1, int num2){
+        int min = Math.min(num1, num2);
 
-                if(next.dest == end) return true;
+        parent[num1] = min;
+        parent[num2] = min;
+    }
 
-                check[next.dest] = true;
-                queue.add(next);
+    // minVal 이상인 경로 연결하고 최종으로 start와 end가 연결되었는지 리턴
+    public static boolean makeMst(int minVal){
+        int[] parent = new int[nodeSize + 1];
+        for(int i = 1; i <= nodeSize; i++){
+            parent[i] = i;
+        }
+
+        for(Edge edge : graph){
+            if(edge.val < minVal) continue;
+
+            int node1Find = find(parent, edge.node1);
+            int node2Find = find(parent, edge.node2);
+
+            // 연결되어있지 않으면 연결
+            if(node1Find != node2Find){
+                union(parent, node1Find, node2Find);
             }
         }
-        return false;
+
+        if(find(parent, start) == find(parent, end)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public static void main(String[] args) throws IOException{
@@ -42,9 +60,6 @@ public class Main {
         StringTokenizer st = new StringTokenizer(bf.readLine());
         nodeSize = Integer.parseInt(st.nextToken());
         int edgeSize = Integer.parseInt(st.nextToken());
-        for(int i = 0; i <= nodeSize; i++){
-            graph.add(new ArrayList<>());
-        }
 
         int min = Integer.MAX_VALUE, max = 0;
 
@@ -54,8 +69,7 @@ public class Main {
             int node2 = Integer.parseInt(st.nextToken());
             int val = Integer.parseInt(st.nextToken());
 
-            graph.get(node1).add(new Node(node2, val));
-            graph.get(node2).add(new Node(node1, val));
+            graph.add(new Edge(node1, node2, val));
 
             min = Math.min(min, val);
             max = Math.max(max, val);
@@ -68,7 +82,7 @@ public class Main {
         while(min <= max){
             int mid = (min + max) / 2;
 
-            boolean possiblePah = bfs(mid);
+            boolean possiblePah = makeMst(mid);
 
             if(possiblePah){
                 min = mid + 1;

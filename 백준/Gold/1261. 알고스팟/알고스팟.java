@@ -9,10 +9,11 @@ public class Main {
     public static int[] dirCol = {1, 0, 0, -1};
 
     public static class Pos{
-        int row, col;
-        public Pos(int r, int c){
+        int row, col, val;
+        public Pos(int r, int c, int val){
             this.row = r;
             this.col = c;
+            this.val = val;
         }
     }
 
@@ -25,8 +26,13 @@ public class Main {
             }
         }
 
-        Queue<Pos> queue = new LinkedList<>();
-        queue.add(new Pos(0, 0));
+        PriorityQueue<Pos> queue = new PriorityQueue<>(new Comparator<Pos>(){
+            @Override
+            public int compare(Pos o1, Pos o2){
+                return o1.val - o2.val;
+            }
+        });
+        queue.add(new Pos(0, 0, 0));
         ansArr[0][0] = 0;
 
         while(!queue.isEmpty()){
@@ -39,15 +45,15 @@ public class Main {
                 int nextCol = curr.col + dirCol[i];
 
                 if((nextRow < 0 || nextRow >= rowSize) || (nextCol < 0 || nextCol >= colSize)) continue;
-//                if(check[nextRow][nextCol]) continue;
+                if(check[nextRow][nextCol]) continue;
 
                 if(arr[nextRow][nextCol] == 0 && ansArr[curr.row][curr.col] < ansArr[nextRow][nextCol]){
                     ansArr[nextRow][nextCol] = ansArr[curr.row][curr.col];
-                    queue.add(new Pos(nextRow, nextCol));
+                    queue.add(new Pos(nextRow, nextCol, ansArr[nextRow][nextCol]));
                 }
                 else if(arr[nextRow][nextCol] == 1 && ansArr[curr.row][curr.col] + 1 < ansArr[nextRow][nextCol]){
                     ansArr[nextRow][nextCol] = ansArr[curr.row][curr.col] + 1;
-                    queue.add(new Pos(nextRow, nextCol));
+                    queue.add(new Pos(nextRow, nextCol, ansArr[nextRow][nextCol]));
                 }
             }
         }
